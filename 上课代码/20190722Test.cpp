@@ -127,7 +127,6 @@ namespace N1
 	}
 }
 
-
 namespace N1
 {
 	int c = 10;
