@@ -9,7 +9,7 @@ int a2 = 20;
 int main()
 {
 	int a = 10;
-
+	
 	return 0;
 }
 #endif
@@ -715,7 +715,8 @@ int main()
 	cout << typeid(c).name() << endl;
 	cout << typeid(d).name() << endl;
 
-	std::map<std::string, std::string> m{ { "apple", "Æ»¹û" }, {"banana", "Ïã½¶"} };
+	std::map<std::string, std::string> m
+		
 	//std::map<std::string, std::string>::iterator it = m.begin();
 	auto it = m.begin();
 	while (it != m.end())
@@ -816,6 +817,11 @@ int main()
 	return 0;
 }
 #endif
+
+
+
+
+
 
 #if 0
 struct Student
