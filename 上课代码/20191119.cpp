@@ -421,17 +421,22 @@ private:
 	int _minute;
 	int _second;
 };
+
+// 构造函数作用：初始化对象，不负责为对象开辟空间
+// Date* pd = new Date;
 class Date
 {
 public:
 // 	Date()
 // 	{}
 
+	Date(int year){}
+
 private:
 	int _year;
 	int _month;
 	int _day;
-	Time _t;
+	//Time _t;
 };
 
 
@@ -485,16 +490,629 @@ int main()
 }
 #endif
 
+struct Goods
+{
+	string _name;
+	double _price;
+};
 
-class A
-{};
+#if 0
+#include <algorithm>
 
-class B : virtual public A
-{};
+
+// 1. 函数指针: 实现一个比较功能
+bool isLess(const Goods& g1, const Goods& g2)
+{
+	return g1._price < g2._price;
+}
+
+
+// 2. 通过仿函数
+struct IsGreater
+{
+	bool operator()(const Goods& g1, const Goods& g2)
+	{
+		return g1._price > g2._price;
+	}
+};
+
+
+// Date
+
+// Time
+int main()
+{
+
+
+	Goods gds[] = { { "苹果", 2.1 }, { "相交", 3 }, { "橙子", 2.2 }, { "菠萝", 1.5 } };
+	sort(gds, gds + sizeof(gds) / sizeof(gds[0]), isLess);
+
+	sort(gds, gds + sizeof(gds) / sizeof(gds[0]), IsGreater());
+	return 0;
+}
+#endif
+
+#if 0
+#include <algorithm>
+
+int main()
+{
+	Goods gds[] = { { "苹果", 2.1 }, { "相交", 3 }, { "橙子", 2.2 }, { "菠萝", 1.5 } };
+	sort(gds, gds + sizeof(gds) / sizeof(gds[0]), [](const Goods& l, const Goods& r)
+		->bool
+	{
+		return l._price < r._price;
+	});
+	return 0;
+}
+#endif
+
+#if 0
+int Add(int left, int right)
+{
+	return left + right;
+}
+
+void TestFunc()
+{
+	int a = 10, b = 20;
+	Add(a, b);
+}
+
+int main()
+{
+	int a = 10, b = 20;
+
+	// [捕获列表](参数列表)->returnType{实现体};
+
+	auto Add = [](int a, int b)->int{
+		cout << "[](int a, int b)->int{}" << endl;
+		return a + b; 
+	};
+
+	int c = 30, d = 40;
+	Add(c, d);
+
+
+	[]{};
+	return 0;
+}
+#endif
+
+#if 0
+int main()
+{
+	int a = 10, b = 20;
+	int c = 0;
+
+	cout << &c << endl;
+
+	// c 按照值的方式进行捕获
+	auto Add = [c](int left, int right)mutable->int
+	{
+		cout << &c << endl;
+		c = left + right;
+		return c;
+	};
+
+	Add(a, b);
+
+	return 0;
+}
+#endif
+
+#if 0
+int main()
+{
+	int a = 10, b = 20;
+	int c = 0;
+
+	cout << &a << endl;
+	cout << &b << endl;
+	cout << &c << endl;
+
+	// c 按照值的方式进行捕获
+	auto Add = [=](int left, int right)mutable->int
+	{
+		cout << &a << endl;
+		cout << &b << endl;
+		cout << &c << endl;
+
+		c = left + right;
+		return c;
+	};
+
+	Add(a, b);
+
+	return 0;
+}
+#endif
+
+#if 0
+int main()
+{
+	int a = 10, b = 20;
+	int c = 0;
+
+	cout << &c << endl;
+
+	// c 按照值的方式进行捕获
+	auto Add = [&c](int left, int right)mutable->int
+	{
+		cout << &c << endl;
+		c = left + right;
+		return c;
+	};
+
+	Add(a, b);
+
+	return 0;
+}
+#endif
+
+#if 0
+int main()
+{
+	int a = 10, b = 20;
+	int c = 0;
+
+	cout << &a << endl;
+	cout << &b << endl;
+	cout << &c << endl;
+
+	// c 按照值的方式进行捕获
+	auto Add = [&](int left, int right)mutable->int
+	{
+		cout << &a << endl;
+		cout << &b << endl;
+		cout << &c << endl;
+
+		c = left + right;
+		return c;
+	};
+
+	Add(a, b);
+	return 0;
+}
+#endif
+
+#if 0
+int main()
+{
+	int a = 10, b = 20;
+	int c = 0;
+
+	cout << &a << endl;
+	cout << &b << endl;
+	cout << &c << endl;
+
+	// =: 以值的方式捕获所有变量
+	// a：以值的方式捕获a
+	// a重复捕获  代码编译时报错
+	auto Add = [=, a](int left, int right)mutable->int
+	{
+		cout << &a << endl;
+		cout << &b << endl;
+		cout << &c << endl;
+
+		c = left + right;
+		return c;
+	};
+
+	Add(a, b);
+	return 0;
+}
+#endif
+
+
+
+#if 0
+int main()
+{
+	int a = 10, b = 20;
+	int c = 0;
+
+	cout << &a << endl;
+	cout << &b << endl;
+	cout << &c << endl;
+
+	if (1)
+	{
+		// =: 以值的方式捕获所有变量
+		// &a：以引用的方式捕获a
+		//auto Add = [=, &a](int left, int right)mutable->int
+		auto Add = [&, a](int left, int right)mutable->int
+		{
+			cout << &a << endl;
+			cout << &b << endl;
+			cout << &c << endl;
+
+			c = left + right;
+
+			return c;
+		};
+
+		Add(a, b);
+	}
+	
+	return 0;
+}
+#endif
+
+#if 0
+//auto Add = [](int a, int b)->int{ return a + b; };
+
+int main()
+{
+	Add(10, 20);
+
+	return 0;
+}
+#endif
+
+//
+
+#if 0
+int g_a = 10;
+int main()
+{
+	int a = 10;
+	int b = 20;
+
+	auto Add = [a, b](int left, int right)->int{ return left + right; };
+	Add(10, 20);
+
+	return 0;
+}
+#endif
+
+#if 0
+// 定义一个没有参数，没有返回值类型的函数指针变量
+void(*PF)();
+
+
+//main::<lambda_70cf8d9e75d81d4fee39ed2f2f0febe9>& main::<lambda_70cf8d9e75d81d4fee39ed2f2f0febe9>::operator=(const main::<lambda_70cf8d9e75d81d4fee39ed2f2f0febe9> &);
+// main::<A>& operator=(const main::<A>);
+
+int main()
+{
+	auto f1 = []{cout << "hello world" << endl; };
+	auto f2 = []{cout << "hello world!" << endl; };
+	// 此处先不解释原因，等lambda表达式底层实现原理看完后，大家就清楚了
+	//f1 = f2; // 编译失败--->提示找不到operator=()
+	// 允许使用一个lambda表达式拷贝构造一个新的副本
+	
+ 	auto f3(f2);
+ 	f3();
+ 	// 可以将lambda表达式赋值给相同类型的函数指针
+ 	PF = f2;
+ 	PF();
+	return 0;
+}
+#endif
+
+#if 0
+class Rate
+{
+public:
+	Rate(double rate) : _rate(rate)
+	{}
+
+	double operator()(double money, int year)
+	{
+		return money * _rate * year;
+	}
+private:
+	double _rate;
+};
 
 
 int main()
 {
-	B b;
+	// 函数对象
+	double rate = 0.49;
+	Rate r1(rate);
+	r1(10000, 2);
+
+	// lamber
+	auto r2 = [rate](double monty, int year)->double
+	{
+		return monty*rate*year; 
+	};
+
+	r2(10000, 2);
 	return 0;
 }
+#endif
+
+#if 0
+int main()
+{
+	const int& cra = 10;
+	return 0;
+}
+#endif
+
+
+#if 0
+// C++98: 引用概念
+// C++11: 右值引用: 也是一个别名，只能引用右值
+int Test()
+{
+	int a = 10;
+	return a;
+}
+
+int main()
+{
+	int a = 10;
+	int& ra = a;
+
+	a = 10;
+	cout << &a << endl;
+
+	// int&& rra = a;  // 编译失败：因为a是左值
+	int&& rra = 10;
+
+
+	const int c = 20;
+	// cout << &c << endl;
+	//const int&& rrc = c;
+
+	int b1 = 1, b2 = 2;
+	// b1 + b2 = 10;
+	// &(b1 + b2);
+
+	// b1+b2的表达式结果是右值
+	int&& rrb = b1 + b2;
+	
+	// ++b1表达式结果是左值
+	//++b1 = 20;
+
+	//Test() = 10;
+	//(&Test());
+	int&& rt = Test();
+
+	int t = Test();
+	return 0;
+}
+#endif
+
+#if 0
+/*
+右值： 1.不能放在赋值运算符的左侧
+      2.不能取&
+	  3.有些表达式的结果可能是左值：a+b
+	  4.有些函数的返回值结果：
+	  int  Test()
+	  {
+	      int a = 10;
+		  return a;
+	  }
+
+	  只能将其作为判断是否为右值的参考
+*/
+
+
+int& Test(int& a)
+{
+	a = 10;
+	return a;
+}
+
+int main()
+{
+	int b = 0;
+	Test(b) = 100;
+	return 0;
+}
+#endif
+
+#if 0
+class Test
+{
+public:
+	Test()
+	{
+		cout << "Test():" << this << endl;
+	}
+
+	Test(const Test& t)
+	{
+		cout << "Test(const Test&):" << this << endl;
+	}
+
+	Test& operator=(const Test& t)
+	{
+		cout << this << "=" << &t << endl;
+		return *this;
+	}
+
+	~Test()
+	{
+		cout << "~Test():"<<this << endl;
+	}
+};
+
+Test func(Test t)
+{
+	Test temp;
+	temp = t;
+	return temp;
+}
+
+void TestFunc()
+{
+	Test t1;
+	Test t2(t1);
+	t2 = func(t1);
+}
+
+int main()
+{
+	TestFunc();
+	return 0;
+}
+#endif
+
+#if 0
+int main()
+{
+	int&& ra = 10;
+
+	int b = 10;
+	// int&& rb = b; 
+	int&& rb = move(b);  // 将一个左值转化为右值
+
+	return 0;
+}
+#endif
+
+class String
+{
+public:
+	String(const char* str = "")
+	{
+		if (nullptr == str)
+			str = "";
+
+		_str = new char[strlen(str) + 1];
+		strcpy(_str, str);
+	}
+
+
+	String(const String& s)
+		: _str(new char[strlen(s._str) + 1])
+	{
+		strcpy(_str, s._str);
+	}
+
+	// 移动构造：将s中的资源转移给当前对象
+	String(String&& s)
+		: _str(s._str)
+	{
+		s._str = nullptr;
+	}
+
+	String& operator=(const String& s)
+	{
+		if (this != &s)
+		{
+			char* str = new char[strlen(s._str) + 1];
+			strcpy(str, s._str);
+			delete[] _str;
+			_str = str;
+		}
+
+		return *this;
+	}
+
+	// 移动赋值
+	String& operator=(String&& s)
+	{
+		if (this != &s)
+		{
+			delete[] _str;
+			_str = s._str;
+			s._str = nullptr;
+		}
+
+		return *this;
+	}
+
+	~String()
+	{
+		if (_str)
+		{
+			delete[] _str;
+			_str = nullptr;
+		}
+	}
+
+	String operator+(const String& s)
+	{
+		char* str = new char[strlen(_str) + strlen(s._str) + 1];
+		strcpy(str, _str);
+		strcat(str, s._str);
+
+		String strRet(str);
+		return strRet;
+	}
+
+	char& operator[](size_t index)
+	{
+		return _str[index];
+	}
+private:
+	char* _str;
+};
+
+#if 0
+void TestString()
+{
+	String s1("hello ");
+	String s2("world");
+	String s3;
+	s3 = s1 + s2;
+}
+
+int main()
+{
+	//TestString();
+
+	String s1("hello");
+
+	// move的误用
+	String s2(move(s1));
+	s1[0] = 'H';
+	return 0;
+}
+#endif
+
+class Person
+{
+public:
+	Person(char* name, char* sex, int age)
+		: _name(name)
+		, _sex(sex)
+		, _age(age)
+	{}
+
+	Person(const Person& p)
+		: _name(p._name)
+		, _sex(p._sex)
+		, _age(p._age)
+	{}
+
+#if 0
+	Person(Person&& p)
+		: _name(p._name)
+		, _sex(p._sex)
+		, _age(p._age)
+	{}
+#else
+		Person(Person&& p)
+		: _name(move(p._name))
+		, _sex(move(p._sex))
+		, _age(p._age)
+	{}
+#endif
+private:
+	String _name;
+	String _sex;
+	int _age;
+};
+
+Person GetTempPerson()
+{
+	Person p("prety", "male", 18);
+	return p;
+}
+
+int main()
+{
+	Person p(GetTempPerson());
+	return 0;
+}
+
+
