@@ -1,3 +1,4 @@
+#if 0
 #include<iostream>
 using namespace std;
 #define N 3.14
@@ -28,3 +29,4 @@ int main()
 		}
 	}
 }
+#endif
